@@ -1,9 +1,9 @@
 'use strict';
 
 const mongoose = require("mongoose");
-Schema = mongoose.Schema;
-bcrypt = require("bcrypt");
-SALT_WORK_FACTOR = 10;
+const Schema = mongoose.Schema;
+const bcrypt = require("bcrypt");
+const SALT_WORK_FACTOR = 10;
 
 //                          Create User Schema
 const UserSchema = new Schema({
@@ -35,7 +35,7 @@ UserSchema.methods.comparePassword = function(candidatePassword, cb) {
 
 const User = mongoose.model("User", UserSchema);
 
-module.sxports.User = User;
+module.exports.User = User;
 
 const CourseSchema = new Schema({
     user: {type: mongoose.Schema.Types.ObjectId, default: UserSchema._id},
