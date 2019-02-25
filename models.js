@@ -1,16 +1,14 @@
 'use strict';
 
-const mongoose = require("mongoose"),
- Schema = mongoose.Schema,
- bcrypt = require("bcryptjs"),
- SALT_WORK_FACTOR = 10;
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
 //                          Create User Schema
 const UserSchema = new Schema({
-    firstName: {type: String, required: true},
-    lastName: {type: String, required: true},
-    emailAddress: {type: String, required: true},
-    password: {type: String, required: true}
+    firstName: { type: mongoose.Schema.Types.ObjectId, ref:'user'},
+    lastName: { type: String, required: true},
+    emailAddress: { type: String, required: true},
+    password: { type: String, required: true}
 });
 
 const User = mongoose.model("User", UserSchema);
