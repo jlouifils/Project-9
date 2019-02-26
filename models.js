@@ -5,24 +5,24 @@ const Schema = mongoose.Schema;
 
 //                          Create User Schema
 const UserSchema = new Schema({
-    firstName: { type: String, required: true},
-    lastName: { type: String, required: true},
-    emailAddress: { type: String, required: true},
-    password: { type: String, required: true}
+    firstName:  String, 
+    lastName: String,
+    emailAddress: String, 
+    password:  String
 });
 
-const User = mongoose.model("User", UserSchema);
-
-module.exports.User = User;
-
 const CourseSchema = new Schema({
-    user: {type: mongoose.Schema.Types.ObjectId, default: UserSchema._id},
-    title: {type: String, required: true },
-    description: {type: String, required: true},
+    user: {type: Schema.Types.ObjectId, ref:'user'},
+    title: String, 
+    description: String, 
     estimatedTime: String,
     materialsNeeded: String
 });
 
 const Course = mongoose.model("course", CourseSchema);
 
-module.exports.Course = Course;
+const User = mongoose.model('User', UserSchema);
+
+module.exports.Course = {
+    Course, User
+}

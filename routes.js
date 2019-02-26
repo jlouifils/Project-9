@@ -2,6 +2,7 @@
 
 //Require packages
 const { check, validationResult } = require('express-validator/check');
+var mongoose = require('mongoose');
 const bcryptjs = require('bcryptjs');
 var express = require("express");
 var router = express.Router();
@@ -195,7 +196,13 @@ router.post("/courses", authenticateUser,  [
     return res.status(400).json({ errors: errorMessages });
   }
   //Create a new course document
-	var course = new Course(req.body); //create a new course document from incoming json on the request.body
+	var course = new Course({ //create a new course document from incoming json on the request.body
+    user: mongoose.Types.ObjectId(),
+    title: req.body.title,
+    description: req.body.description,
+    estimatedTime: req.body.estimatedTime,
+    "materialsNeeded": req.body.materialsNeeded
+  }); 
 	course.save(function(err){ //call save() on course var and pass a callback function
     if(err) return next(err);
     res.location("/api/courses")
