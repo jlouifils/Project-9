@@ -26,12 +26,12 @@ mongoose.connect("mongodb://localhost:27017/fsjstd-restapi"); //name of the data
 var db = mongoose.connection; 
 
 
-db.on("error", function(err){ //if there is an error, log it out
+db.on("error", function(err){ 
 	console.error("There was a connection error:", err);
 });
 
 
-db.once("open", function(){ //if the connection was successful the print out a message
+db.once("open", function(){ 
 	console.log("database connection has been successful!");
 });
 
@@ -50,16 +50,16 @@ app.get('/', (req, res) => {
 
 // catch  404 and forward to error handler
 app.use((req, res, next) => {
-  var err = new Error("Not Found"); ////use js native error constructor to create a new error object
-  err.status = 404 //set property status of error
-  next(err) //put err inside next(), this lets express know that there's been an error and pass it to the error handler below
+  var err = new Error("Not Found"); 
+  err.status = 404 
+  next(err)
   });
 
 
 // Error Handler
-app.use(function(err, req, res, next){ //error handlers have 4 parameters, the 1st param is an error object
-	res.status(err.status || 500); //if err object has a status property, set it to the HTTP status, if the err status is undefined use 500 status code 
-	res.json({ //err is sent to client as json
+app.use(function(err, req, res, next){ 
+	res.status(err.status || 500);  
+	res.json({ 
 		error: {
 			message: err.message
 		}

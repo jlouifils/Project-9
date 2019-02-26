@@ -1,38 +1,25 @@
-//in this file I wil create the schema and model
+'use strict';
 
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-//require packages
-var mongoose = require('mongoose'), //require mongoose
-  Schema = mongoose.Schema //store schema constructor as a local variable
- 
+const Course = mogoose.model('Course', CourseSchema);
 
-//***CREATE USER SCHEMA***
-var UserSchema = new Schema({
-  firstName: String, 
-  lastName: String,
-  emailAddress: String,
-  password:  String  
-});
+const User = mogoose.model('User', UserSchema);
 
-
-
-//***CREATE COURSE SCHEMA***
-var CourseSchema = new Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User'}, // (_id from the users collection) by using population
-  title: String, 
-  description: String, 
+const CourseSchema = new Schema({
+  user: {type: Schema.Types.ObjectId, ref:"User"},
+  title: String,
   estimatedTime: String,
   materialsNeeded: String
 });
 
-//create the course model using using Mongoose's model()
-var Course = mongoose.model("Course", CourseSchema);
+const UserSchema = new Schema({
+  firstName: String,
+  lastName: String,
+  emailAddess: String,
+  password: String,
+});
 
-//create the user model using Mongoose's model()
-var User = mongoose.model("User", UserSchema);
+module.exports = {Course, User}
 
-
-//export Course and User model, then require them into the routes file
-module.exports = {
-  Course, User,
-}
