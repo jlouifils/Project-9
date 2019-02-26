@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 
 //                          Create User Schema
 const UserSchema = new Schema({
-    firstName: { type: mongoose.Schema.Types.ObjectId, ref:'user'},
+    firstName: { type: String, required: true},
     lastName: { type: String, required: true},
     emailAddress: { type: String, required: true},
     password: { type: String, required: true}
