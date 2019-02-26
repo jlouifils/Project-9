@@ -100,6 +100,7 @@ router.get('/users', authenticateUser, (req, res) => {
   const user = req.currentUser;
 //we use the Response object's json() method to return the current user's information formatted as JSON:
   res.json({
+    user_id: user._id,
     firstName: user.firstName,
     lastName:  user.lastName,
     emailAddress: user.emailAddress,
@@ -196,8 +197,9 @@ router.post("/courses", authenticateUser,  [
     return res.status(400).json({ errors: errorMessages });
   }
   //Create a new course document
-	var course = new Course({ //create a new course document from incoming json on the request.body
-    user: mongoose.Types.ObjectId(),
+  const user = req.currentUser;
+	const course = new Course({ //create a new course document from incoming json on the request.body
+    user: user_id,
     title: req.body.title,
     description: req.body.description,
     estimatedTime: req.body.estimatedTime,

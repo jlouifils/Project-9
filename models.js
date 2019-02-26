@@ -18,7 +18,7 @@ var UserSchema = new Schema({
 
 //***CREATE COURSE SCHEMA***
 var CourseSchema = new Schema({
-  user: { type: Schema.Types.ObjectId, ref: 'User'}, // (_id from the users collection) by using population
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User'}, // (_id from the users collection) by using population
   title: String, 
   description: String, 
   estimatedTime: String,
