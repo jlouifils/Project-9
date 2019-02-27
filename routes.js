@@ -44,23 +44,23 @@ const authUser =(req, res, next) => {
                             /**COURSE ROUTES */
 //GET COURSE
 //ROUTE FOR COURSES
-router.get("/api/courses", function(req, res, next) {
+router.get("/courses", function(req, res, next) {
   Course.find({})
-              .exec(function(err,course){
+              .exec(function(err,courses){
                   if(err) return next(err);
-                  res.json(course);
+                  res.json(courses);
               });
 });
 
 //GET COURSE BY ID
 //ROUTE FOR SPECIFIC COURSES
-router.get("/api/courses/:id",authUser, function(req, res,) {
-  res.json(req.course);    
+router.get("/courses/:id",authUser, function(req, res, next) {
+  res.json(req.courses);    
 });
 
 //POST COURSE
 // ROUTE FOR CREATING COURSE
-router.post("/api/courses", authUser, function(req, res, next) {
+router.post("/courses", authUser, function(req, res, next) {
   const course = new Course({
     user: req.user, 
     title: req.body.title,
@@ -74,3 +74,5 @@ router.post("/api/courses", authUser, function(req, res, next) {
       res.json(course);
   });
 });
+
+module.exports = router;
