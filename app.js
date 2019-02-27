@@ -37,7 +37,7 @@ db.once("open", function(){
 
 
 //connect app.js to routes, and have api appear in the url
-app.use("/api",routes);
+app.use("/api", routes);
 
 
 // setup a friendly greeting for the root route

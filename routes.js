@@ -2,11 +2,10 @@
 
 const express = require('express');
 const router = express.Router();
+const User = require("./models").User;
+const Course = require('./models').Course;
 const bcryptjs = require('bcryptjs');
 const authorized = require('basic-auth');
-
-const User = require("./models").User
-const Course = require('./models').Course
 
 router.param("id", function(req,res,next,id){
   Course.findById(req.params.id, function(err, doc){
@@ -18,11 +17,11 @@ router.param("id", function(req,res,next,id){
       }
       req.Course = doc;  
       return next();
-  });    
+  }).populate('user');    
 });
 
 const authUser =(req, res, next) => {
-  User.find({ emailAdress: authorized(req).name}, function(err, user){
+  User.findOne({ emailAdress: authorized(req).name}, function(err, user){
     if(user) {
       const auth = bcryptjs.compareSync(authorized(req).pass, user.password);
       if(auth) {
