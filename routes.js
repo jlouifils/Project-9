@@ -21,11 +21,12 @@ router.param("id", function(req,res,next,id){
 });
 
 const authUser =(req, res, next) => {
-  User.findOne({ emailAdress: authorized(req).name}, function(err, user){
+  User.findOne({ emailAddress: authorized(req).name}, function(err, user){
     if(user) {
       const auth = bcryptjs.compareSync(authorized(req).pass, user.password);
       if(auth) {
-        console.log(`Successful username ${user.emailAddress}`);
+        console.log(`Successful username ${cUser.emailAddress}`);
+        req.currentUser = cUser;
       } else {
         err = new Error("failure");
         err.status = 401;
@@ -41,7 +42,7 @@ const authUser =(req, res, next) => {
 
 
 
-                            /**COURSE ROUTES */
+                                  /**COURSE ROUTES */
 //GET COURSE
 //ROUTE FOR COURSES
 router.get("/courses", function(req, res, next) {
@@ -54,8 +55,8 @@ router.get("/courses", function(req, res, next) {
 
 //GET COURSE BY ID
 //ROUTE FOR SPECIFIC COURSES
-router.get("/courses/:id",authUser, function(req, res, next) {
-  res.json(req.courses);    
+router.get("/courses/:id", function(req, res,) {
+  res.json(req.Course);    
 });
 
 //POST COURSE
@@ -74,5 +75,74 @@ router.post("/courses", authUser, function(req, res, next) {
       res.json(course);
   });
 });
+
+//PUT COURSE
+// UPDATE COURSE ROUTES
+router.put("/courses/:id", function(req, res, next) {
+  const id = req.params.id;
+  Course.update({_id: id})
+  .exec()
+  .then(result =>{
+    res.status(204).json(result);
+  })
+   .catch(err => {
+  console.log(err);
+  res.status(500).json({
+    error: err
+  });  
+  });
+});
+
+//DELETE COURSE
+//DELETE COURSE ROUTES
+router.delete("/courses/:id", authUser, function(req, res, next) {
+  const id = req.params.id;
+  Course.remove({_id: id})
+  .exec()
+  .then(result =>{
+    res.status(204).json(result);
+  })
+   .catch(err => {
+  console.log(err);
+  res.status(500).json({
+    error: err
+  });  
+  });
+});
+
+                                    /**USER ROUTES */
+
+//GET USER
+//ROUTE FOR USER
+router.get("/users", function(req, res, next) {
+  User.find({})
+              .exec(function(err,users){
+                  if(err) return next(err);
+                  res.json(users);
+              });
+});
+
+//POST USER
+// ROUTE FOR CREATING USER
+router.post("/users", authUser,function(req, res,) {
+  const user = new User({
+    firstName: req.body.firstName, 
+    lastName: req.body.lastName,
+    emailAddress: req.body.emailAddress,
+    password: bcryptjs.hashSync(req.body.password),
+  });
+  user.save().then(result =>{
+    console.log(result);
+    res.location('/api');
+    res.status(201).json('User Created!');
+  })
+  .catch(err =>{
+    console(err);
+    res.status(400).json({error: err});
+  });
+});
+
+
+
 
 module.exports = router;
