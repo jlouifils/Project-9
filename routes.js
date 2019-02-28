@@ -61,7 +61,7 @@ router.get("/courses/:id", function(req, res,) {
 
 //POST COURSE
 // ROUTE FOR CREATING COURSE
-router.post("/courses",  function(req, res, next) {
+router.post("/courses", authUser, function(req, res, next) {
   const course = new Course({
     user: req.user, 
     title: req.body.title,
@@ -95,7 +95,7 @@ router.put("/courses/:id", function(req, res, next) {
 
 //DELETE COURSE
 //DELETE COURSE ROUTES
-router.delete("/courses/:id", function(req, res,) {
+router.delete("/courses/:id", authUser,function(req, res,) {
   const id = req.params.id;
   Course.remove({_id: id})
   .exec()
@@ -120,12 +120,6 @@ router.get("/users", function(req, res, next) {
                   if(err) return next(err);
                   res.json(users);
               });
-});
-
-//GET USERS BY ID
-//ROUTE FOR SPECIFIC USERS
-router.get("/users/:_id", function(req, res,) {
-  res.json(req.User);    
 });
 
 //POST USER
