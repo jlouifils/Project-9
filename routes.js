@@ -26,8 +26,8 @@ const authUser = (req, res, next) => {
     if(user) {
       const auth = bcrypt.compareSync(authorized(req).pass, user.password);
       if(auth) {
-        console.log(`Successful username ${user.emailAddress}`);
-        req.currentUser = user;
+        console.log(`Successful username ${cUser.emailAddress}`);
+        req.currentUser = cUser;
         next(); 
       } else {
         err = new Error("failure");
@@ -118,10 +118,11 @@ router.delete("/courses/:id", authUser, function(req, res,) {
 //GET USER
 //ROUTE FOR USER
 router.get("/users", authUser, function(req, res, next) {
+  const cUser = req.currentUser 
   User.find({})
               .exec(function(err,users){
                   if(err) return next(err);
-                  res.json(users);
+                  res.json(cUser);
               });
 });
 
