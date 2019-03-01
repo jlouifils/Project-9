@@ -4,18 +4,18 @@
 const express = require('express');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
-const jsonParser = require("body-parser").json;
+const jsonParser = require("body-parser");
 const routes = require("./routes");
 const app = express(); // create the Express app
-
-
 
 // setup morgan which gives us http request logging
 app.use(morgan('dev'));
 
 
 //use jsonparser to accept json data coming into the routes
-app.use(jsonParser());
+app.use(jsonParser.json());
+
+app.use(jsonParser.urlencoded({ extended: false }))
 
 
 //Connect to MongoDB server

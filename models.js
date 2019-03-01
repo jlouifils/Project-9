@@ -4,7 +4,7 @@ const mongoose = require('mongoose'),
  Schema = mongoose.Schema;
 
 const CourseSchema = new Schema({
-  user:{type: Schema.Types.ObjectId, ref:"User"},
+  user:{type: mongoose.Schema.Types.ObjectId, ref:"User"},
   title: String,
   estimatedTime: String,
   materialsNeeded: String

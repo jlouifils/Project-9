@@ -2,8 +2,8 @@
 
 const express = require('express');
 const router = express.Router();
-const User = require("./models").User;
-const Course = require('./models').Course;
+const Course = require("./models").Course;
+const User = require('./models').User;
 const bcryptjs = require('bcryptjs');
 const authorized = require('basic-auth');
 
@@ -22,7 +22,7 @@ router.param("id", function(req,res,next,id){
 
 const authUser =(req, res, next) => {
   const aUser = authorized(req);
-  User.findOne({ emailAddress: aUser.user}, function(err, user){
+  User.findOne({ emailAddress: aUser.name}, function(err, user){
     if(user) {
       const auth = bcryptjs.compareSync(aUser.pass, user.password);
       if(auth) {
@@ -36,7 +36,7 @@ const authUser =(req, res, next) => {
       }
     } else {
       err = new Error("User Not Found!");
-      err.status = 404;
+      err.status = 401;
       next(err);
     }
   });
@@ -49,7 +49,7 @@ const authUser =(req, res, next) => {
 //ROUTE FOR COURSES
 router.get("/courses", function(req, res, next) {
   Course.find({})
-              .populate('user', 'firstName lastName')
+              .populate('user','firstName lastName')
               .exec(function(err,courses){
                   if(err) return next(err);
                   res.json(courses);
@@ -72,7 +72,7 @@ router.post("/courses", authUser, function(req, res, next) {
     estimatedTime: req.body.estimatedTime,
     materialsNeeded: req.body.materialsNeeded
   });
-  course.save(function(err, course){
+  course.save(function(err, Course){
       if(err) return next(err);
       res.status(201);
       res.json(Course);
@@ -98,7 +98,7 @@ router.put("/courses/:id", function(req, res, next) {
 
 //DELETE COURSE
 //DELETE COURSE ROUTES
-router.delete("/courses/:id", authUser,function(req, res,) {
+router.delete("/courses/:id", authUser, function(req, res,) {
   const id = req.params.id;
   Course.remove({_id: id})
   .exec()
@@ -117,7 +117,7 @@ router.delete("/courses/:id", authUser,function(req, res,) {
 
 //GET USER
 //ROUTE FOR USER
-router.get("/users", function(req, res, next) {
+router.get("/users", authUser, function(req, res, next) {
   User.find({})
               .exec(function(err,users){
                   if(err) return next(err);
