@@ -1,10 +1,10 @@
-'use strict'
+'use strict';
 
 const express = require('express');
 const router = express.Router();
 const Course = require("./models").Course;
 const User = require('./models').User;
-const bcryptjs = require('bcryptjs');
+const bcrypt = require('bcryptjs');
 const authorized = require('basic-auth');
 
 router.param("id", function(req,res,next,id){
@@ -20,14 +20,14 @@ router.param("id", function(req,res,next,id){
   }).populate('user');    
 });
 
-const authUser =(req, res, next) => {
-  const aUser = authorized(req);
-  User.findOne({ emailAddress: aUser.name}, function(err, user){
+const authUser = (req, res, next) => {
+
+  User.findOne({ emailAddress: authorized(req).name}, function(err, user){
     if(user) {
-      const auth = bcryptjs.compareSync(aUser.pass, user.password);
+      const auth = bcrypt.compareSync(authorized(req).pass, user.password);
       if(auth) {
-        console.log(`Successful username ${cUser.emailAddress}`);
-        req.currentUser = cUser;
+        console.log(`Successful username ${user.emailAddress}`);
+        req.currentUser = user;
         next(); 
       } else {
         err = new Error("failure");
