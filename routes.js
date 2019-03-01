@@ -26,8 +26,8 @@ const authUser = (req, res, next) => {
     if(user) {
       const auth = bcrypt.compareSync(authorized(req).pass, user.password);
       if(auth) {
-        console.log(`Successful username ${cUser.emailAddress}`);
-        req.currentUser = cUser;
+        console.log(`Successful username ${user.emailAddress}`);
+        req.currentUser = user;
         next(); 
       } else {
         err = new Error("failure");
@@ -118,11 +118,10 @@ router.delete("/courses/:id", authUser, function(req, res,) {
 //GET USER
 //ROUTE FOR USER
 router.get("/users", authUser, function(req, res, next) {
-  const cUser = req.currentUser 
   User.find({})
               .exec(function(err,users){
                   if(err) return next(err);
-                  res.json(cUser);
+                  res.json(users);
               });
 });
 
@@ -133,7 +132,7 @@ router.post("/users", function(req, res,) {
     firstName: req.body.firstName, 
     lastName: req.body.lastName,
     emailAddress: req.body.emailAddress,
-    password: bcrypt.hashSync(req.body.password, 10),
+    password: bcrypt.hashSync(req.body.password),
   });
   user.save().then(result =>{
     console.log(result);
