@@ -19,7 +19,7 @@ router.param("id", function(req,res,next,id){
       return next();
   }).populate('user');    
 });
-
+// AUTHENTHICATE USERS
 const authUser = (req, res, next) => {
 
   User.findOne({ emailAddress: authorized(req).name}, function(err, user){
