@@ -21,12 +21,14 @@ router.param("id", function(req,res,next,id){
 });
 
 const authUser =(req, res, next) => {
-  User.findOne({ emailAddress: authorized(req).name}, function(err, user){
+  const aUser = authorized(req);
+  User.findOne({ emailAddress: aUser.user}, function(err, user){
     if(user) {
-      const auth = bcryptjs.compareSync(authorized(req).pass, user.password);
+      const auth = bcryptjs.compareSync(aUser.pass, user.password);
       if(auth) {
         console.log(`Successful username ${cUser.emailAddress}`);
         req.currentUser = cUser;
+        next(); 
       } else {
         err = new Error("failure");
         err.status = 401;
@@ -47,6 +49,7 @@ const authUser =(req, res, next) => {
 //ROUTE FOR COURSES
 router.get("/courses", function(req, res, next) {
   Course.find({})
+              .populate('user', 'firstName lastName')
               .exec(function(err,courses){
                   if(err) return next(err);
                   res.json(courses);
@@ -124,8 +127,8 @@ router.get("/users", function(req, res, next) {
 
 //POST USER
 // ROUTE FOR CREATING USER
-router.post("/users", authUser,function(req, res,) {
-  const user = new User({
+router.post("/users", function(req, res,) {
+  const user = new User ({
     firstName: req.body.firstName, 
     lastName: req.body.lastName,
     emailAddress: req.body.emailAddress,
@@ -137,7 +140,7 @@ router.post("/users", authUser,function(req, res,) {
     res.status(201).json('User Created!');
   })
   .catch(err =>{
-    console(err);
+    console.log(err);
     res.status(400).json({error: err});
   });
 });
