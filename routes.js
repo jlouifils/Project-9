@@ -133,7 +133,7 @@ router.post("/users", function(req, res,) {
     firstName: req.body.firstName, 
     lastName: req.body.lastName,
     emailAddress: req.body.emailAddress,
-    password: bcrypt.hashSync(req.body.password),
+    password: bcrypt.hashSync(req.body.password, 10),
   });
   user.save().then(result =>{
     console.log(result);
