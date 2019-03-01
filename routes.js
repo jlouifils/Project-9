@@ -83,7 +83,7 @@ router.post("/courses", authUser, function(req, res, next) {
 // UPDATE COURSE ROUTES
 router.put("/courses/:id", function(req, res, next) {
   const id = req.params.id;
-  Course.update({_id: id})
+  Course.findOneAndUpdate({_id: id})
   .exec()
   .then(result =>{
     res.status(204).json(result);
@@ -132,7 +132,7 @@ router.post("/users", function(req, res,) {
     firstName: req.body.firstName, 
     lastName: req.body.lastName,
     emailAddress: req.body.emailAddress,
-    password: bcryptjs.hashSync(req.body.password),
+    password: bcrypt.hashSync(req.body.password),
   });
   user.save().then(result =>{
     console.log(result);
