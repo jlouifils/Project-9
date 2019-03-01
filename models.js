@@ -13,7 +13,7 @@ const CourseSchema = new Schema({
 const UserSchema = new Schema({
   firstName: {type: String, required: [true, "First name is required"]},
   lastName: {type: String, required: [true, "Last name is required"]},
-  emailAddess: {type: String, required: [true, "Email address is required"]},
+  emailAddress: {type: String, required: [true, "Email address is required"]},
   password: {type: String, required: [true, "Password is required"]}
 });
 
