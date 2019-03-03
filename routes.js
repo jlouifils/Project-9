@@ -65,40 +65,56 @@ router.get("/courses/:id", function(req, res,) {
 //POST COURSE
 // ROUTE FOR CREATING COURSE
 router.post("/courses", authUser, function(req, res, next) {
+  
   const course = new Course({
-    user: req.user, 
+    user: req.currentUser._id, 
     title: req.body.title,
     description: req.body.description,
     estimatedTime: req.body.estimatedTime,
     materialsNeeded: req.body.materialsNeeded
   });
+  if(course.title && course.description){
   course.save(function(err, Course){
       if(err) return next(err);
       res.status(201);
       res.json(Course);
   });
+ }  else {
+  const err = new Error("need title and description");
+  err.status = 401;
+  return next(err);
+ }
 });
 
 //PUT COURSE
 // UPDATE COURSE ROUTES
-router.put("/courses/:id", function(req, res, next) {
+router.put("/courses/:id", authUser,  function(req, res, next) {
   const id = req.params.id;
-  Course.findOneAndUpdate({_id: id})
+  Course.findOneAndUpdate(
+    ({_id: id}),
+    {
+      $set: {
+        title: req.body.title,
+        description: req.body.description,
+        estimatedTime: req.body.estimatedTime,
+        materialsNeeded: req.body.materialsNeeded
+      }
+    })
+  
   .exec()
   .then(result =>{
     res.status(204).json(result);
   })
    .catch(err => {
   console.log(err);
-  res.status(500).json({
-    error: err
-  });  
+  res.status(500);
+  next(err)
   });
 });
 
 //DELETE COURSE
 //DELETE COURSE ROUTES
-router.delete("/courses/:id", authUser, function(req, res,) {
+router.delete("/courses/:id", authUser,  function(req, res,) {
   const id = req.params.id;
   Course.remove({_id: id})
   .exec()
